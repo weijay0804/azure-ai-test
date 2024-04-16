@@ -20,6 +20,14 @@ class Settings(BaseSettings):
 
     APP_NAME: str = os.environ.get("APP_NAME", "FastAPI")
 
+    # Azure OpenAI config
+    AZURE_OPENAI_EMBEDDING_API_KEY: str = os.environ.get("AZURE_OPENAI_EMBEDDING_API_KEY")
+    AZURE_OPENAI_EMBEDDING_ENDPOINT: str = os.environ.get("AZURE_OPENAI_EMBEDDING_ENDPOINT")
+    AZURE_OPENAI_EMBEDDING_API_VERSION: str = os.environ.get(
+        "AZURE_OPENAI_EMBEDDING_API_VERSION", "2023-07-01-preview"
+    )
+    AZURE_OPENAI_EMBEDDING_MODEL_NAME: str = os.environ.get("AZURE_OPENAI_EMBEDDING_MODEL_NAME")
+
 
 @lru_cache
 def get_settings() -> Settings:

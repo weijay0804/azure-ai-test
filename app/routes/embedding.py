@@ -4,6 +4,8 @@
 
 from fastapi import APIRouter, UploadFile, HTTPException
 
+from app.services.ai_model import embedding
+
 embedding_router = APIRouter(
     prefix="/embedding", tags=["Embedding"], responses={404: {"description": "Not found."}}
 )
@@ -21,5 +23,8 @@ def upload_embedding_txt_file(file: UploadFile):
     # 因為 read() 回傳的是 bytes 類型，所以要轉成 str
     # 最後將結尾的空白去除
     content = raw_content.decode("utf-8").rstrip()
+
+    # 進行 embedding 操作
+    embedding_response = embedding.get_embedding(content)
 
     return {"message": "file upload success."}
