@@ -9,6 +9,7 @@ uvicorn = {extras = ["standard"], version = "*"}
 python-dotenv = "*"
 pydantic-settings = "*"
 python-multipart = "*"
+openai = "*"
 
 [dev-packages]
 
