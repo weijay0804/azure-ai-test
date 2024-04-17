@@ -2,6 +2,8 @@
 放跟 `embedding` 操作相關的 API
 '''
 
+import uuid
+
 from fastapi import APIRouter, UploadFile, HTTPException, Depends
 from qdrant_client import QdrantClient
 
@@ -28,7 +30,12 @@ def upload_embedding_txt_file(
     # 最後將結尾的空白去除
     content = raw_content.decode("utf-8").rstrip()
 
-    # 進行 embedding 操作
-    embedding.embedding(text=content, qsession=qsession)
+    uid = str(uuid.uuid4())
 
-    return {"message": "file upload success."}
+    # 進行 embedding 操作
+    embedding.embedding(text=content, qsession=qsession, id=uid)
+
+    # 上傳至 Azure Blob
+    url = embedding.upload_to_azure_blob(file, f"{uid}.txt")
+
+    return {"message": "file upload success.", "azure_url": url}

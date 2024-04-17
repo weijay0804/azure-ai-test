@@ -28,6 +28,10 @@ class Settings(BaseSettings):
     )
     AZURE_OPENAI_EMBEDDING_MODEL_NAME: str = os.environ.get("AZURE_OPENAI_EMBEDDING_MODEL_NAME")
 
+    # Azure Blob config
+    AZURE_BLOB_SERVICE_CONNECT_STR: str = os.environ.get("AZURE_BLOB_SERVICE_CONNECT_STR")
+    AZURE_BLOB_EMBEDDING_CONTAINER_NAME: str = os.environ.get("AZURE_BLOB_EMBEDDING_CONTAINER_NAME")
+
     # Qdrant config
     QDRANT_HOST: str = os.environ.get("QDRANT_HOST")
     QDRANT_EMBEDDING_TEST_COLLECTION_NAME: str = os.environ.get(
