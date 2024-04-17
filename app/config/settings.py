@@ -28,6 +28,12 @@ class Settings(BaseSettings):
     )
     AZURE_OPENAI_EMBEDDING_MODEL_NAME: str = os.environ.get("AZURE_OPENAI_EMBEDDING_MODEL_NAME")
 
+    # Qdrant config
+    QDRANT_HOST: str = os.environ.get("QDRANT_HOST")
+    QDRANT_EMBEDDING_TEST_COLLECTION_NAME: str = os.environ.get(
+        "QDRANT_EMBEDDING_TEST_COLLECTION_NAME", "embedding_test"
+    )
+
 
 @lru_cache
 def get_settings() -> Settings:

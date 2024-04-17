@@ -2,9 +2,11 @@
 放跟 `embedding` 操作相關的 API
 '''
 
-from fastapi import APIRouter, UploadFile, HTTPException
+from fastapi import APIRouter, UploadFile, HTTPException, Depends
+from qdrant_client import QdrantClient
 
-from app.services.ai_model import embedding
+from app.services import embedding
+from app.config.database import get_qdrant_session
 
 embedding_router = APIRouter(
     prefix="/embedding", tags=["Embedding"], responses={404: {"description": "Not found."}}
@@ -12,7 +14,9 @@ embedding_router = APIRouter(
 
 
 @embedding_router.post("/file")
-def upload_embedding_txt_file(file: UploadFile):
+def upload_embedding_txt_file(
+    file: UploadFile, qsession: QdrantClient = Depends(get_qdrant_session)
+):
     """上傳 txt 檔案並進行 embedding"""
 
     if file.content_type != "text/plain":
@@ -25,6 +29,6 @@ def upload_embedding_txt_file(file: UploadFile):
     content = raw_content.decode("utf-8").rstrip()
 
     # 進行 embedding 操作
-    embedding_response = embedding.get_embedding(content)
+    embedding.embedding(text=content, qsession=qsession)
 
     return {"message": "file upload success."}

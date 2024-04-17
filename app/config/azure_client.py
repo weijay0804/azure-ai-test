@@ -1,5 +1,5 @@
 '''
-處理進行 AI 處理時需要遇到的共同操作（像是連線至 Azure OpenAI)
+跟 Azure 連線、設定的操作（像是連線至 Azure OpenAI)
 '''
 
 from openai import AzureOpenAI
