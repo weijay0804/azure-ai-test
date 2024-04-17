@@ -12,6 +12,6 @@
   * - [X] 將 txt 中的文字傳給 AI models 計算並回傳結果
   * - [X] 建立 Qdrant 的 Docker Compose
   * - [X] 將 AI models 回傳的結果儲存至 Qdrant
-  * - [ ] 將 txt 檔案上傳至 Azure Blob (這邊的檔名應該要用流水號)
+  * - [X] 將 txt 檔案上傳至 Azure Blob (這邊的檔名應該要用流水號)
   * - [ ] 建立 MySQL 的 Docker Compose
   * - [ ] 將 txt 檔名和 Azure Blob URL 儲存至資料庫
