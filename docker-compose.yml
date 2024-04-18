@@ -1,0 +1,42 @@
+version: "1.0"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ".:/usr/backend/"
+    ports:
+      - "8000:8000"
+    networks:
+      - describly
+    depends_on:
+      - mysql_db
+      - qdrant
+
+  mysql_db:
+      image: mysql:latest
+      restart: always
+      volumes:
+        - ./db_volumes/mysql:/var/lib/mysql/
+      ports:
+        - "3306:3306"
+      environment:
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        MYSQL_DATABASE: ${MYSQL_DB}
+      networks:
+        - describly
+
+  qdrant:
+    image: qdrant/qdrant
+    restart: always
+    ports:
+      - "6333:6333"
+    volumes:
+      - ./qdrant_storage:/qdrant/storage
+    networks:
+      - describly
+
+networks:
+  describly:
