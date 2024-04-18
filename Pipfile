@@ -12,6 +12,9 @@ python-multipart = "*"
 openai = "*"
 qdrant-client = "*"
 azure-storage-blob = "*"
+sqlalchemy = "*"
+pymysql = "*"
+alembic = "*"
 
 [dev-packages]
 
