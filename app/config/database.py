@@ -4,11 +4,39 @@
 
 from typing import Generator
 
+from sqlalchemy import create_engine
 from qdrant_client import QdrantClient, models
+from sqlalchemy.orm import sessionmaker, declarative_base
 
 from app.config.settings import get_settings
 
 settings = get_settings()
+
+Base = declarative_base()
+
+
+# MySQL 設定
+def init_db_session():
+
+    engine = create_engine(
+        settings.DATABASE_URI, pool_pre_ping=True, pool_recycle=3600, pool_size=20, max_overflow=0
+    )
+
+    SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
+
+    return SessionLocal
+
+
+def get_db_session() -> Generator:
+
+    session_local = init_db_session()
+    session = session_local()
+
+    try:
+        yield session
+
+    finally:
+        session.close()
 
 
 # Qdrant 設定
@@ -29,7 +57,7 @@ def init_qdrant(qsession: QdrantClient):
 
 def get_qdrant_session() -> Generator:
 
-    session = QdrantClient("http://host.docker.internal:6333")
+    session = QdrantClient(settings.QDRANT_HOST)
 
     try:
         init_qdrant(session)
