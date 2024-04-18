@@ -5,7 +5,7 @@
 from pydantic import BaseModel
 
 
-class EmbeddingObj(BaseModel):
+class EmbeddingDataObj(BaseModel):
     '''將 embedding 操作後得到的資料包裝成一個物件
 
     `id`: 物件唯一識別值，只是方便將資料加入至 `qdrant` (自動生成)

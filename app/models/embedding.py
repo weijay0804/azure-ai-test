@@ -5,8 +5,8 @@ from sqlalchemy import Column, String, Text, func, DateTime
 from app.config.database import Base
 
 
-class EmbeddingFile(Base):
-    '''存放使用者上傳的 txt 檔案相關資訊'''
+class EmbeddingFileModel(Base):
+    '''`embedding_file` table ORM model'''
 
     __tablename__ = "embedding_file"
 
