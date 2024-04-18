@@ -6,8 +6,9 @@ from sqlalchemy.orm import Session
 from qdrant_client import QdrantClient
 from fastapi import APIRouter, UploadFile, HTTPException, Depends
 
+from app.common import deps
 from app.services import embedding
-from app.config.database import get_qdrant_session, get_db_session
+
 
 embedding_router = APIRouter(
     prefix="/embedding", tags=["Embedding"], responses={404: {"description": "Not found."}}
@@ -17,8 +18,8 @@ embedding_router = APIRouter(
 @embedding_router.post("/file")
 def upload_embedding_txt_file(
     file: UploadFile,
-    qsession: QdrantClient = Depends(get_qdrant_session),
-    db_session: Session = Depends(get_db_session),
+    qsession: QdrantClient = Depends(deps.get_qsession),
+    db_session: Session = Depends(deps.get_db_session),
 ):
     """上傳 txt 檔案並進行 embedding"""
 
