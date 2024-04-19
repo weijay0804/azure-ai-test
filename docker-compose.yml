@@ -1,7 +1,9 @@
 version: "3"
 
 services:
+
   backend:
+
     build:
       context: .
       dockerfile: Dockerfile
@@ -9,18 +11,19 @@ services:
       - ".:/usr/backend/"
     ports:
       - "8000:8000"
-    networks:
-      - describly
     depends_on:
-      - mysql_db
-      - qdrant
-    
+      qdrant:
+        condition: service_started
+      mysql_db:
+        condition: service_healthy
+    command: /bin/bash -c "alembic upgrade head && python ./startup.py && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
     # 讓容器可以互相溝通
     # 在 Linux 才需要這個設定
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
   mysql_db:
+
       image: mysql:latest
       restart: always
       volumes:
@@ -30,26 +33,32 @@ services:
       environment:
         MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
         MYSQL_DATABASE: ${MYSQL_DB}
-      networks:
-        - describly
       # 讓容器可以互相溝通
       # 在 Linux 才需要這個設定
       extra_hosts:
         - "host.docker.internal:host-gateway"
+      healthcheck:
+        test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+        interval: 10s
+        timeout: 3s
+        retries: 3
 
   qdrant:
-    image: qdrant/qdrant
+
+    build:
+      context: .
+      dockerfile: qdrant.Dockerfile
     restart: always
     ports:
       - "6333:6333"
     volumes:
       - ./qdrant_storage:/qdrant/storage
-    networks:
-      - describly
     # 讓容器可以互相溝通
     # 在 Linux 才需要這個設定
     extra_hosts:
       - "host.docker.internal:host-gateway"
-
-networks:
-  describly:
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/readyz"]
+      interval: 10s
+      timeout: 2s
+      retries: 5
