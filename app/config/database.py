@@ -3,7 +3,6 @@
 '''
 
 from sqlalchemy import create_engine
-from qdrant_client import QdrantClient, models
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 from app.config.settings import get_settings
@@ -23,19 +22,3 @@ def init_db_session():
     SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 
     return SessionLocal
-
-
-# Qdrant 設定
-def init_qdrant(qsession: QdrantClient):
-
-    # 先檢查 collection 存不存在，如果不存在，就建立
-    try:
-        qsession.get_collection(settings.QDRANT_EMBEDDING_TEST_COLLECTION_NAME)
-
-    except Exception:
-
-        # 因為 openai embedding model 的維度是 1536 ，所以建立 size = 1536
-        qsession.create_collection(
-            settings.QDRANT_EMBEDDING_TEST_COLLECTION_NAME,
-            vectors_config=models.VectorParams(size=1536, distance=models.Distance.COSINE),
-        )

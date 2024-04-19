@@ -7,7 +7,7 @@ from typing import Generator
 from qdrant_client import QdrantClient
 
 from app.config.settings import get_settings
-from app.config.database import init_db_session, init_qdrant
+from app.config.database import init_db_session
 
 settings = get_settings()
 
@@ -29,7 +29,6 @@ def get_qsession() -> Generator:
     session = QdrantClient(settings.QDRANT_HOST)
 
     try:
-        init_qdrant(session)
         yield session
 
     finally:
