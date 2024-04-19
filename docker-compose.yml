@@ -14,6 +14,11 @@ services:
     depends_on:
       - mysql_db
       - qdrant
+    
+    # 讓容器可以互相溝通
+    # 在 Linux 才需要這個設定
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   mysql_db:
       image: mysql:latest
@@ -27,6 +32,10 @@ services:
         MYSQL_DATABASE: ${MYSQL_DB}
       networks:
         - describly
+      # 讓容器可以互相溝通
+      # 在 Linux 才需要這個設定
+      extra_hosts:
+        - "host.docker.internal:host-gateway"
 
   qdrant:
     image: qdrant/qdrant
@@ -37,6 +46,10 @@ services:
       - ./qdrant_storage:/qdrant/storage
     networks:
       - describly
+    # 讓容器可以互相溝通
+    # 在 Linux 才需要這個設定
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 networks:
   describly:
