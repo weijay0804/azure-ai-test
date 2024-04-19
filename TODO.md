@@ -15,3 +15,16 @@
   * - [X] 將 txt 檔案上傳至 Azure Blob (這邊的檔名應該要用流水號)
   * - [X] 建立 MySQL 的 Docker Compose
   * - [X] 將 txt 檔名和 Azure Blob URL 儲存至資料庫
+
+* 用戶上傳一段問句，使用 GPT model 計算並取得問句的回答
+  1. 用戶使用 API POST 一段問句
+  2. 後端將問句上傳至 GPT model 並取得回答
+  3. 將對話內容紀錄至資料庫
+
+  > 代辦事項
+  * - [ ] 使用 FastAPI 建立 EndPoint (`/chat/text`) [POST]
+  * - [X] 建立 Azure AI models
+  * - [ ] 要根據傳入的 session id 去資料庫取得歷史的對話紀錄，並將紀錄整理成可以上傳的格式
+  * - [ ] 將問句經由 model 計算並取得結果
+  * - [ ] 建例資料庫的資料表 (chat_role, chat_messages)
+  * - [ ] 將對話資料儲存到資料庫
