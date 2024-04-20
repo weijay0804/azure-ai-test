@@ -12,6 +12,35 @@ from app.config.azure_client import get_azure_openai_client, get_azure_blob_serv
 settings = get_settings()
 
 
+def get_chat_result(messages: List[dict]) -> str:
+    """取得經由 gpt model 計算後的對話結果
+
+    Args:
+        messages: 歷史對話紀錄
+        ```
+        [
+            {"role" : "user", "content" : "q1"},
+            ...
+        ]
+        ```
+
+    Returns:
+        對話結果
+    """
+
+    client = get_azure_openai_client(
+        api_key=settings.AZURE_OPENAI_EMBEDDING_API_KEY,
+        azure_endpoint=settings.AZURE_OPENAI_EMBEDDING_ENDPOINT,
+        api_version=settings.AZURE_OPENAI_EMBEDDING_API_VERSION,
+    )
+
+    response = client.chat.completions.create(
+        model="interviewee-gtp-4-model", max_tokens=50, messages=messages
+    )
+
+    return response.choices[0].message.content
+
+
 def get_embedding_result(text: str) -> List[float]:
     """將文字經由 OpenAI Embedding model 計算，並取得結果
 

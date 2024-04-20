@@ -6,6 +6,7 @@ from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
 
 from app.schemas import db_schemas
+from app.common.azure import get_chat_result
 from app.schemas.data_schemas import GptContentObj
 from app.schemas.request_schemas import ChatTextRequest
 from app.schemas.response_schemas import ChatTextResponse
@@ -195,23 +196,19 @@ def chat(data: ChatTextRequest, db: Session) -> ChatTextResponse:
     )
 
     # 將資料輸入到 GPT model 並取得結果
-    # TODO 真正的接到 GPT model
     gpt_model_input = [jsonable_encoder(input) for input in raw_gpt_model_input]
-    print(gpt_model_input)
+    chat_result = get_chat_result(gpt_model_input)
 
     # 將 model 的結果儲存至資料庫
-    from datetime import datetime
-
-    model_result = f"Bot answer {datetime.now().strftime('%H:%M:%S')}"
     _create_chat_message(
         db,
         chat_session_obj=session_db_obj,
         chat_role_obj=assistant_role_db_obj,
-        message=model_result,
+        message=chat_result,
     )
 
     response = ChatTextResponse(
-        session_id=session_db_obj.id, question=data.message, answer=model_result
+        session_id=session_db_obj.id, question=data.message, answer=chat_result
     )
 
     return response
