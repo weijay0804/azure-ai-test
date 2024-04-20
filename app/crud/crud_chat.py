@@ -95,6 +95,6 @@ class CRUDChatMessage(CRUDBase[ChatMessage, db_schemas.CreateChatMessage]):
         return super().get(db, id)
 
 
-curd_chat_session = CRUDChatSession(ChatSession)
+crud_chat_session = CRUDChatSession(ChatSession)
 crud_chat_role = CRUDChatRole(ChatRole)
 crud_chat_message = CRUDChatMessage(ChatMessage)

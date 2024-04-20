@@ -16,3 +16,14 @@ class EmbeddingDataObj(BaseModel):
     id: str
     vector: list
     text: str
+
+
+class GptContentObj(BaseModel):
+    '''GPT model 接收的資料格式
+
+    `role`: 代表對話的角色 (例如： user、assistant)
+    `content`: 對話內容文字
+    '''
+
+    role: str
+    content: str
