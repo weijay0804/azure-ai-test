@@ -25,6 +25,6 @@
   * - [X] 使用 FastAPI 建立 EndPoint (`/chat/text`) [POST]
   * - [X] 建立 Azure AI models
   * - [X] 要根據傳入的 session id 去資料庫取得歷史的對話紀錄，並將紀錄整理成可以上傳的格式
-  * - [ ] 將問句經由 model 計算並取得結果
+  * - [X] 將問句經由 model 計算並取得結果
   * - [X] 建例資料庫的資料表 (chat_role, chat_messages)
   * - [X] 將對話資料儲存到資料庫
