@@ -7,10 +7,18 @@ import logging
 from openai import AzureOpenAI
 from azure.storage.blob import BlobServiceClient
 
+from app.config.settings import get_settings
 
-def get_azure_openai_client(api_key: str, azure_endpoint: str, api_version: str) -> AzureOpenAI:
+settings = get_settings()
 
-    client = AzureOpenAI(api_key=api_key, azure_endpoint=azure_endpoint, api_version=api_version)
+
+def get_azure_openai_client() -> AzureOpenAI:
+
+    client = AzureOpenAI(
+        api_key=settings.AZURE_OPENAI_API_KEY,
+        azure_endpoint=settings.AZURE_OPENAI_ENDPOINT,
+        api_version=settings.AZURE_OPENAI_API_VERSION,
+    )
 
     return client
 

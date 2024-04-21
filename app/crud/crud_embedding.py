@@ -16,4 +16,4 @@ class CRUDEmbeddingFile(CRUDBase[EmbeddingFileModel, db_schemas.CreateEmbeddingF
         return super().get(db, id)
 
 
-embedding_file_crud = CRUDEmbeddingFile(EmbeddingFileModel)
+crud_embedding_file = CRUDEmbeddingFile(EmbeddingFileModel)

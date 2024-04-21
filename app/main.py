@@ -4,8 +4,8 @@ API 主入口
 
 from fastapi import FastAPI
 
-from app.config.settings import get_settings
 from app.routes import embedding, chat
+from app.config.settings import get_settings
 
 
 def create_app():

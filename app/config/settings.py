@@ -21,12 +21,15 @@ class Settings(BaseSettings):
     APP_NAME: str = os.environ.get("APP_NAME", "FastAPI")
 
     # Azure OpenAI config
-    AZURE_OPENAI_EMBEDDING_API_KEY: str = os.environ.get("AZURE_OPENAI_EMBEDDING_API_KEY")
-    AZURE_OPENAI_EMBEDDING_ENDPOINT: str = os.environ.get("AZURE_OPENAI_EMBEDDING_ENDPOINT")
-    AZURE_OPENAI_EMBEDDING_API_VERSION: str = os.environ.get(
-        "AZURE_OPENAI_EMBEDDING_API_VERSION", "2023-07-01-preview"
-    )
+    AZURE_OPENAI_API_KEY: str = os.environ.get("AZURE_OPENAI_API_KEY")
+    AZURE_OPENAI_ENDPOINT: str = os.environ.get("AZURE_OPENAI_ENDPOINT")
+    AZURE_OPENAI_API_VERSION: str = os.environ.get("AZURE_OPENAI_API_VERSION", "2023-07-01-preview")
+
+    # Azure OpenAI Embedding model config
     AZURE_OPENAI_EMBEDDING_MODEL_NAME: str = os.environ.get("AZURE_OPENAI_EMBEDDING_MODEL_NAME")
+
+    # Azure OpenAI GPT model config
+    AZURE_OPENAI_GPT_MODEL_NAME: str = os.environ.get("AZURE_OPENAI_GPT_MODEL_NAME")
 
     # Azure Blob config
     AZURE_BLOB_SERVICE_CONNECT_STR: str = os.environ.get("AZURE_BLOB_SERVICE_CONNECT_STR")

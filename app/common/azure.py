@@ -28,14 +28,10 @@ def get_chat_result(messages: List[dict]) -> str:
         對話結果
     """
 
-    client = get_azure_openai_client(
-        api_key=settings.AZURE_OPENAI_EMBEDDING_API_KEY,
-        azure_endpoint=settings.AZURE_OPENAI_EMBEDDING_ENDPOINT,
-        api_version=settings.AZURE_OPENAI_EMBEDDING_API_VERSION,
-    )
+    client = get_azure_openai_client()
 
     response = client.chat.completions.create(
-        model="interviewee-gtp-4-model", max_tokens=50, messages=messages
+        model=settings.AZURE_OPENAI_GPT_MODEL_NAME, max_tokens=50, messages=messages
     )
 
     return response.choices[0].message.content
@@ -51,11 +47,7 @@ def get_embedding_result(text: str) -> List[float]:
         計算後的向量 (1536 維)
     """
 
-    client = get_azure_openai_client(
-        api_key=settings.AZURE_OPENAI_EMBEDDING_API_KEY,
-        azure_endpoint=settings.AZURE_OPENAI_EMBEDDING_ENDPOINT,
-        api_version=settings.AZURE_OPENAI_EMBEDDING_API_VERSION,
-    )
+    client = get_azure_openai_client()
 
     response = client.embeddings.create(
         input=text, model=settings.AZURE_OPENAI_EMBEDDING_MODEL_NAME

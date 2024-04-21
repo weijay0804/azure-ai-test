@@ -14,7 +14,7 @@ from app.schemas import data_schemas
 from app.common.qdrant import upsert_data
 from app.config.settings import get_settings
 from app.models.embedding import EmbeddingFileModel
-from app.crud.crud_embedding import embedding_file_crud
+from app.crud.crud_embedding import crud_embedding_file
 from app.common.azure import get_embedding_result, upload_to_azure_blob
 
 
@@ -46,14 +46,15 @@ def embedding(
         id=uid, raw_filename=file.filename, azure_blob_url=url
     )
 
-    db_obj = embedding_file_crud.create(db_session, obj_in=db_obj_in)
+    db_obj = crud_embedding_file.create(db_session, obj_in=db_obj_in)
 
     return db_obj
 
 
 def get_embedding_file_data(file_id: str, db: Session) -> EmbeddingFileModel:
+    """根據 file_id 取得資料庫中的資料"""
 
-    db_obj = embedding_file_crud.get(db, id=file_id)
+    db_obj = crud_embedding_file.get(db, id=file_id)
 
     if db_obj is None:
         raise HTTPException(status_code=404, detail=f"File id: {file_id} is not exist.")
