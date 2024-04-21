@@ -17,6 +17,12 @@ class CRUDChatSession(CRUDBase[ChatSession, db_schemas.CreateChatSession]):
     def get(self, db: Session, id: Any) -> ChatSession | None:
         return super().get(db, id)
 
+    def get_chat_messages(self, db: Session, *, id: Any) -> List[ChatMessage]:
+
+        chat_session = self.get(db, id=id)
+
+        return chat_session.chat_messages.all()
+
     def get_chat_messages_filter_with_role(
         self, db: Session, *, id: Any, role: ChatRole
     ) -> List[ChatMessage]:

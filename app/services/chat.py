@@ -212,3 +212,16 @@ def chat(data: ChatTextRequest, db: Session) -> ChatTextResponse:
     )
 
     return response
+
+
+def get_chat_messages(db: Session, session_id: str) -> List[ChatMessage]:
+    """取得 session_id 下的所有對話紀錄"""
+
+    try:
+        chat_messages = crud_chat_session.get_chat_messages(db, id=session_id)
+
+    # 如果傳入的 session_id 不存在資料庫中
+    except AttributeError:
+        raise HTTPException(status_code=404, detail=f"Session id: {session_id} is not exist.")
+
+    return chat_messages

@@ -17,3 +17,25 @@ def get_chat(data: request_schemas.ChatTextRequest, db: Session = Depends(get_db
     response = chat.chat(data=data, db=db)
 
     return response
+
+
+@chat_router.get("/{session_id}/messages")
+def get_chat_messages(session_id: str, db: Session = Depends(get_db_session)):
+
+    messages = chat.get_chat_messages(db, session_id)
+
+    chat_message_list = []
+
+    # 整理成方便查看的格式
+    for message in messages:
+        tmp = response_schemas.ChatMessage(
+            role=message.chat_role.role, message=message.message, create_at=message.create_at
+        )
+
+        chat_message_list.append(tmp)
+
+    response = response_schemas.ChatMessagesResponse(
+        session_id=session_id, messages=chat_message_list
+    )
+
+    return response
