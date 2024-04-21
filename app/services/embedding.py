@@ -49,3 +49,13 @@ def embedding(
     db_obj = embedding_file_crud.create(db_session, obj_in=db_obj_in)
 
     return db_obj
+
+
+def get_embedding_file_data(file_id: str, db: Session) -> EmbeddingFileModel:
+
+    db_obj = embedding_file_crud.get(db, id=file_id)
+
+    if db_obj is None:
+        raise HTTPException(status_code=404, detail=f"File id: {file_id} is not exist.")
+
+    return db_obj

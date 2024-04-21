@@ -15,7 +15,7 @@
   * - [X] 將 txt 檔案上傳至 Azure Blob (這邊的檔名應該要用流水號)
   * - [X] 建立 MySQL 的 Docker Compose
   * - [X] 將 txt 檔名和 Azure Blob URL 儲存至資料庫
-  * - [ ] 傳入 file_id 並取得對應的資料 API
+  * - [X] 傳入 file_id 並取得對應的資料 API
 
 * 用戶上傳一段問句，使用 GPT model 計算並取得問句的回答
   1. 用戶使用 API POST 一段問句

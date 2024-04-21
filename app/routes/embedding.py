@@ -4,10 +4,12 @@
 
 from sqlalchemy.orm import Session
 from qdrant_client import QdrantClient
+from fastapi.encoders import jsonable_encoder
 from fastapi import APIRouter, UploadFile, HTTPException, Depends
 
 from app.common import deps
 from app.services import embedding
+from app.schemas import response_schemas
 
 
 embedding_router = APIRouter(
@@ -36,3 +38,11 @@ def upload_embedding_txt_file(
     db_obj = embedding.embedding(text=content, qsession=qsession, file=file, db_session=db_session)
 
     return {"message": "file upload success.", "azure_url": db_obj.azure_blob_url, "id": db_obj.id}
+
+
+@embedding_router.get("/file/{file_id}", response_model=response_schemas.EmbeddingFileResponse)
+def get_file_data(file_id: str, db_sesion: Session = Depends(deps.get_db_session)):
+
+    db_obj = embedding.get_embedding_file_data(file_id, db_sesion)
+
+    return response_schemas.EmbeddingFileResponse(file_id=db_obj.id, **jsonable_encoder(db_obj))

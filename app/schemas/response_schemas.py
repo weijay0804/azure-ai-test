@@ -3,6 +3,14 @@ from pydantic import BaseModel
 from datetime import datetime
 
 
+class EmbeddingFileResponse(BaseModel):
+
+    file_id: str
+    raw_filename: str
+    azure_blob_url: str
+    create_at: datetime
+
+
 class ChatTextResponse(BaseModel):
 
     session_id: str
