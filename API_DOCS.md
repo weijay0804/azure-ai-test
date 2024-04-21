@@ -25,8 +25,8 @@
 
   * Example:
 
-    ```
     Response:
+    ``` json
         {
             "file_id" : "91294f28-ba05-4dc5-ae0e-28b3d0f56567",
             "azure_blob_url" : "https://....."
@@ -56,8 +56,9 @@
       - `create_at` (str): 資料建立時間。 (UTC0)
 
   * Example:
-    ```
+
     Response:
+    ```json
         {
             "file_id" : "91294f28-ba05-4dc5-ae0e-28b3d0f56567",
             "raw_filename" : "test.txt",
@@ -92,21 +93,23 @@
 
   * Example:
 
-    ```
     Request:
+    ```json
         {
             "message" : "你好",
             "session_id" : "f9b2e23e-2b8d-40d8-aa07-f5f4789b531a"
         }
+    ```
 
     Response:
+    ```json
         {
             "session_id" : "f9b2e23e-2b8d-40d8-aa07-f5f4789b531a",
             "question" : "你好",
             "answer" : "你好，有什么可以帮助您的吗?"
         }
     ```
-    
+
 * [GET] `/chat/{session_id}/messages`
   
   > 取得 `session_id` 的歷史對話資料
@@ -133,8 +136,8 @@
 
 
   * Example:
-    ```
     Response:
+    ```json
         {
             "session_id" : "f9b2e23e-2b8d-40d8-aa07-f5f4789b531a",
             "messages" : [
