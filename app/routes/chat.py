@@ -11,7 +11,7 @@ chat_router = APIRouter(
 )
 
 
-@chat_router.post("/text", response_model=response_schemas.ChatTextResponse)
+@chat_router.post("/messages", response_model=response_schemas.ChatTextResponse)
 def get_chat(data: request_schemas.ChatTextRequest, db: Session = Depends(get_db_session)):
 
     response = chat.chat(data=data, db=db)
