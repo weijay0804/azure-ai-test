@@ -3,6 +3,12 @@ from pydantic import BaseModel
 from datetime import datetime
 
 
+class EmbeddingResultResponse(BaseModel):
+
+    file_id: str
+    azure_blob_url: str
+
+
 class EmbeddingFileResponse(BaseModel):
 
     file_id: str

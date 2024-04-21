@@ -17,7 +17,7 @@ embedding_router = APIRouter(
 )
 
 
-@embedding_router.post("/file")
+@embedding_router.post("/file", response_model=response_schemas.EmbeddingResultResponse)
 def upload_embedding_txt_file(
     file: UploadFile,
     qsession: QdrantClient = Depends(deps.get_qsession),
@@ -37,7 +37,7 @@ def upload_embedding_txt_file(
     # 進行 embedding 操作
     db_obj = embedding.embedding(text=content, qsession=qsession, file=file, db_session=db_session)
 
-    return {"message": "file upload success.", "azure_url": db_obj.azure_blob_url, "id": db_obj.id}
+    return response_schemas.EmbeddingResultResponse(file_id=db_obj.id, **jsonable_encoder(db_obj))
 
 
 @embedding_router.get("/file/{file_id}", response_model=response_schemas.EmbeddingFileResponse)
