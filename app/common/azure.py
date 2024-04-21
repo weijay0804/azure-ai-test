@@ -31,7 +31,7 @@ def get_chat_result(messages: List[dict]) -> str:
     client = get_azure_openai_client()
 
     response = client.chat.completions.create(
-        model=settings.AZURE_OPENAI_GPT_MODEL_NAME, max_tokens=50, messages=messages
+        model=settings.AZURE_OPENAI_GPT_MODEL_NAME, messages=messages
     )
 
     return response.choices[0].message.content
