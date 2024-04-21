@@ -19,7 +19,7 @@ def get_chat(data: request_schemas.ChatTextRequest, db: Session = Depends(get_db
     return response
 
 
-@chat_router.get("/{session_id}/messages")
+@chat_router.get("/{session_id}/messages", response_model=response_schemas.ChatMessagesResponse)
 def get_chat_messages(session_id: str, db: Session = Depends(get_db_session)):
 
     messages = chat.get_chat_messages(db, session_id)
