@@ -18,184 +18,103 @@
 
 # Useage
 
-> 確認服務運行狀態
-
-1. 先確認 docker-compose 服務是否有正常啟動
-   ```bash
-   $ docker-compose ls -a
-   ```
-
-   如果沒有，就進入專案目錄
-   ```bash
-   $ cd /home/interviewee/azure-ai-test
-   ```
-
-   啟動 docker-compose
-   ```
-   $ docker-compose up
-   ```
-
-2. 使用 curl 測試 fastapi 服務
-   ```bash
-   $ curl -X 'GET' 'http://127.0.0.1:8000/'
-   ```
-
-   如果收到這個回傳值表示服務正常
-   ```json
-    {
-        "message" : "test"
-    }
-    ```
+用瀏覽器開啟 [Api 說明文檔](http://20.92.160.233:8000/docs)
 
 ## Embedding
 
 > 進行 embedding 操作
 
-1. 先建立一個 txt 檔案用來測試，或是可以用已經建立好的檔案
+1. 先建立一個測試用的 txt 文檔
 
-2. 先查看 Qdrant 的資料
-    ```bash
-    $ curl -X 'GET' 'http://127.0.0.1:6333/collections/embedding_test' 
-    ```
+2. 先查看 Qdrant 資料庫內的資料
+    
+    使用瀏覽器開啟 [Qdrant dashboard](http://20.92.160.233:6333/dashboard#/collections/embedding_test)
 
-    查看回傳值中的 `points_count` ，代表目前資料庫中的資料數量
+    目前裡面是沒有資料的
+    ![](/demo/images/qdrant1.png)
 
-4. 使用 curl 呼叫 embedding api
-   ```bash
-   $ curl -X 'POST' \
-    'http://127.0.0.1:8000/embedding/file' \
-    -H 'Content-Type: multipart/form-data' \
-    -F 'file=@/home/interviewee/test.txt;type=text/plain'
-   ```
+3. 調用 `/embedding/file` API
 
-   如果收到以下回傳值表示成功
-   ```json
-   {
-    "file_id":"1e29ac52-5431-4c97-9510-a2b5e36513d8","azure_blob_url":"https://...."
-    }
-   ```
+    在 `file` 欄位選擇你剛剛建立的文檔
+    ![](/demo/images/embedding_file1.png)
 
-5. 查看資料是否新增至 Qdrant
-    ```bash
-    $ curl -X 'GET' 'http://127.0.0.1:6333/collections/embedding_test' 
-    ```
+    送出後會得到以下的回傳結果
+    ![](/demo/images/embedding_file2.png)
 
-    查看回傳值中的 `points_count` ，應該會是之前的數量 +1，代表資料成功新增至資料庫中
+    其中的 `file_id` 為這個檔案的唯一辨識符
 
-6. 使用 `file_id` 查看 MySQL 中的資料
-   
-    使用第 4 步驟中回傳值的 `file_id`
+    到此已經完成了 embedding 操作
 
-    *注意：要把其中的 `file_id` 值替換掉*
+4. 查看 Qdrant 資料庫資料
 
-    ```bash
-    $ curl -X 'GET' 'http://127.0.0.1:8000/embedding/file/1e29ac52-5431-4c97-9510-a2b5e36513d8' # 要替換成正確的 file_id
-    ```
+    一樣到先到 [Qdrant dashboard](http://20.92.160.233:6333/dashboard#/collections/embedding_test)
 
-    然後得到 file 在資料庫中的資訊
-    ```json
-    {
-        "file_id": "1e29ac52-5431-4c97-9510-a2b5e36513d8",
-        "raw_filename": "test.txt",
-        "azure_blob_url": "https:....",
-        "create_at": "2024-04-21T12:59:07"
-    }
-    ```
+    此時可以看到多了一筆資料，然後其中的 id 值則是之前 API 回傳的 `file_id` 值
+    ![](/demo/images/qdarnt2.png)
+
+5. 查看 Azure Blob
+
+    用瀏覽器開啟 [Azure Blob 控制面板](https://portal.azure.com/#view/Microsoft_Azure_Storage/ContainerMenuBlade/~/overview/storageAccountId/%2Fsubscriptions%2F8f2d86bc-5e16-472c-9819-b84b989bc28c%2FresourceGroups%2Finterviewee_min%2Fproviders%2FMicrosoft.Storage%2FstorageAccounts%2Finterviewdemo/path/embedding-container/etag/%220x8DC5EDF698C3989%22/defaultEncryptionScope/%24account-encryption-key/denyEncryptionScopeOverride~/false/defaultId//publicAccessVal/None)
+
+    可以看到檔案文件已經成功上傳至 Blob 上，並且檔案名稱是 API 回傳的 `file_id` 值
+    ![](/demo/images/azure_blob.png)
+
+6. 查看 MySQL 中的資料
+
+    在 API 說明文檔頁面中調用 `embedding/file/{file_id}` API
+
+    *注意：其中的 `file_id` 要替換成你在使用時 API 回傳的值*
+
+    ![](/demo/images/get_embedding_file_data1.png)
+
+    送出後會得到以下的回傳值
+    ![](/demo/images/get_embedding_file_data2.png)
+
+    可以看到 API 回傳了資料在資料庫的內容，代表資料成功新增資料庫
 
 ## Chat
 
 > 進行對話聊天操作
 
-1. 新增一個 message
+1. 調用 `/chat/messages` 建立一個對話
 
-    ```bash
-    $ curl -X 'POST' \
-    'http://127.0.0.1:8000/chat/messages' \
-    -H 'Content-Type: application/json' \
-    -d '{"message" : "你好"}'
-    ```
+    *注意：第一次建立對話時不需要傳入 `session_id`*
 
-    會得到以下回傳值
-    ```json
-    {
-        "session_id" : "8dca73df-4db3-4aa7-aa56-4880cd2b73af",
-        "question" : "你好",
-        "answer" : "你好，有什么可以帮助你的吗？"
-    }
-    ```
+    ![](/demo/images/chat1.png)
 
-2. 在對話 session 中繼續對話
+    送出後會得到以下的回傳值
+    ![](/demo/images/chat2.png)
 
-    如果在呼叫 API 時帶入上一步取得的 `session_id`，程式會根據之前的對話紀錄繼續接下去
+    其中的 `session_id` 為這個對話的 session 辨識符
 
-    例如：
+2. 使用 `session_id` 繼續對話
 
-    * 先再繼續一段對話
+    如果我們在調用 API 時傳入 `session_id` 的值，系統會找出歷史的聊天記錄，並繼續下去
 
-        *注意：這邊的 `session_id` 要替換掉*
+    這裡我們將剛剛的 `session_id` 傳入，並繼續問問題
+    ![](/demo/images/chat3.png)
 
-        *注意：這個操作可能會需要一點時間，所以如果 console 卡住是正常的*
+    會得到以下回傳
 
-        ```bash
-        $ curl -X 'POST' \
-        'http://127.0.0.1:8000/chat/messages' \
-        -H 'Content-Type: application/json' \
-        -d '{"session_id" : "8dca73df-4db3-4aa7-aa56-4880cd2b73af", "message" : "什麼是 python"}'
-        ```
+    *注意：這個操作可能會需要一點時間*
+    ![](/demo/images/chat4.png)
 
-        會得到類似以下的回傳
-        ```json
-        {
-            "session_id":"8dca73df-4db3-4aa7-aa56-4880cd2b73af","question":"什麼是 python",
-            "answer":"Python 是一种高级的编程语言，具有清晰、直观的结构。它的特点是易读性强，语法清晰，..."
-        }
-        ```
-    
-    * 然後繼續詢問
+    我們在繼續問他問題，這次我們問一個缺乏上下文無法回答的問題
+    ![](/demo/images/chat5.png)
 
-        ```bash
-        curl -X 'POST' \
-        'http://127.0.0.1:8000/chat/messages' \
-        -H 'Content-Type: application/json' \
-        -d '{"session_id" : "8dca73df-4db3-4aa7-aa56-4880cd2b73af", "message" : "他能幹嘛？"}'
-        ```
+    會得到以下回傳
 
-        會得到類似以下的回傳
-        ```json
-        {
-            "session_id":"8dca73df-4db3-4aa7-aa56-4880cd2b73af","question":"他能幹嘛？",
-            "answer":"Python 的应用范围非常广泛，以下是一些主要的应用领域：..."
-        }
-        ```
+    *注意：這個操作可能會需要一點時間*
+    ![](/demo/images/chat6.png)
 
-3. 使用 `session_id` 取得對話紀錄
+    可以看到他的回答依舊跟我們之前問的問題有關
 
-    *注意： 這邊的 `session_id` 要替換掉*
+3. 根據 `session_id` 取得歷史對話紀錄
 
-    ```bash
-    $ curl -X 'GET' 'http://127.0.0.1:8000/chat/8dca73df-4db3-4aa7-aa56-4880cd2b73af/messages'
-    ```
+    調用 `/chat/{session_id}/messages`
 
-    然後會得到類似以下的回傳
-    ```json
-    {
-        "session_id":"8dca73df-4db3-4aa7-aa56-4880cd2b73af",
-        "messages":[
-            {
-                "role":"user",
-                "message":"你好",
-                "create_at":"2024-04-21T13:18:16"
-            },
-            {
-                "role":"assistant",
-                "message":"你好！有什么可以帮助你的吗？",
-                "create_at":"2024-04-21T13:18:18"
-            },
-            {
-                "role":"user",
-                "message":"什麼是 python",
-                "create_at":"2024-04-21T13:23:09"
-            },
-        ]
-    }
-    ```
+    *注意：其中的 `session_id` 要換成你實際在收到 API 回傳的值*
+    ![](/demo/images/get_chat_messages1.png)
+
+    會收到以下的回傳值
+    ![](/demo/images/get_chat_messages2.png)
